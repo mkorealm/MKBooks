@@ -100,19 +100,19 @@ class Registration(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.configure(background=bg_col)
-        def registration():
-            log = log_entry.get()
-            pas = pas_entry.get()
-
-            res = database.select(connect, log)
-            if res==None:
-                print(1)
-                database.insert_account(connect, log, validate_password(pas))
-            elif str(log).lower()==res['login'].lower():
-                print("Такой аккаунт уже существует!")
+    def registration(self, arg1, arg2):
+        log = arg1
+        pas = arg2
+        res = database.select_account(connect, log)
+        if res == None:
+            if validate_password(pas) == False:
+                pass
             else:
-                print("Error")
-
+                database.insert_account(connect, log, validate_password(pas))
+        elif str(log).lower() == res['login'].lower():
+            print("Такой аккаунт уже существует!")
+        else:
+            print("Error")
         # fonts style
         default_font = font.Font(family="TkDefaultFont:", size=12, weight="normal")
         entry_font = font.Font(family="TkTextFont:", size=14, weight="bold")
@@ -131,19 +131,17 @@ class Registration(tk.Frame):
         log_entry.grid(row=1)
         pas_entry = tk.Entry(reg_container)
         pas_entry.grid(row=3)
-
         self.btn_submit = tk.Button(self,
                                     text="Регистрация",
                                     font=default_font,
-                                    command=registration)
+                                    command=Registration.registration(log_entry.get(), pas_entry.get()))
         self.btn_submit.pack(padx=10, pady=10, side=tk.TOP)
+
 class Account(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        def select():
-            res = database.select_account(connect, Oauth.log_entry.get())
-            print(res)
-        select()
+
+        # authorization account_container
         account_container = tk.LabelFrame(self, padx=115, pady=60)
         account_container.configure(background=bg_col)
         account_container.pack(fill="both", side=tk.LEFT)

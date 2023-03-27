@@ -1,5 +1,4 @@
 import re
-
 def validate_password(arg):
     if len(arg) < 8:
         print("Убедитесь, что ваш пароль состоит как минимум из 8 символов")
@@ -10,3 +9,4 @@ def validate_password(arg):
     else:
         print("Ваш пароль, кажется, в порядке")
         return arg
+    return False
