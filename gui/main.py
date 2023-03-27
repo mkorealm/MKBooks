@@ -1,13 +1,20 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import font
-from tkinter.messagebox import showerror, showwarning, showinfo as mb
+from tkinter.messagebox import showerror, showwarning, showinfo
 from database.connection.connect import database
 from database.connection.config import con
+from func.validation_of_password import validate_password
 
-BG_COL = "#212121"
-FG_COL = "#00BFFF"
+bg_col = "#212121"
+fg_col = "#00BFFF"
 
+connect = database(host=con[0],
+                               port=con[1],
+                               user=con[2],
+                               password=con[3],
+                               database=con[4],
+                               charset=con[5])
 class Windows(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -24,95 +31,155 @@ class Windows(tk.Tk):
         container.grid(row=0, column=0)
 
         self.frames = {}
-        for F in (Oauth, Registration, Books):
+        for F in (Oauth, Registration, Account, Books):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
         self.show_frame(Oauth)
-
     def show_frame(self, cont):
         frame = self.frames[cont]
         frame.tkraise()
-
 class Oauth(tk.Frame):
     def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.configure(background=bg_col)
         def oauth():
-            log = logEntry.get()
-            pas = pasEntry.get()
+            log = log_entry.get()
+            pas = pas_entry.get()
 
-            conect = database(host=con[0],
-                           port=con[1],
-                           user=con[2],
-                           password=con[3],
-                           database=con[4],
-                           charset=con[5])
-            res = database.select(conect, log)
+            res = database.select_account(connect, log)
             message = "Неверный логин или пароль!"
             if res==None:
                 showerror("Ошибка", message)
-            elif str(log)==res['login'] and str(pas)==res['password']:
+            elif str(log).lower()==res['login'].lower() and str(pas)==res['password']:
                 print("Successful!")
-                return controller.show_frame(Books)
+                return controller.show_frame(Account)
             elif str(pas)!=res['password']:
                 showerror("Ошибка", message)
 
-        tk.Frame.__init__(self, parent)
-        self.configure(background=BG_COL)
         # styles
         style = ttk.Style()
-        style.configure("TButton", relief="flat", background=BG_COL)
-        style.configure("BW.TLabel", foreground=FG_COL)
-        style.configure("TButton", foreground=FG_COL, background=BG_COL)
+        style.configure("TButton", relief="flat", background=bg_col)
+        style.configure("BW.TLabel", foreground=fg_col)
+        style.configure("TButton", foreground=fg_col, background=bg_col)
 
-        # fonts style
-        defaultFont = font.Font(family="TkDefaultFont:", size=12, weight="normal")
-        entryFont = font.Font(family="TkTextFont:", size=14, weight="bold")
-        regFont = font.Font(family="TkDefaultFont:", size=10, weight="normal")
-
-        # authorization container
-        oauthContainer = tk.LabelFrame(self, padx=15, pady=10, text="Авторизация", foreground=FG_COL, font=defaultFont)
-        oauthContainer.configure(background=BG_COL)
-        oauthContainer.pack(padx=10, pady=5)
-
-        # items oauthContainer
-        logLabel = tk.Label(oauthContainer, text="ЛОГИН", font=entryFont, foreground=FG_COL, background=BG_COL).grid(row=0)
-        pasLabel = tk.Label(oauthContainer, text="ПАРОЛЬ", font=entryFont, foreground=FG_COL, background=BG_COL).grid(row=2)
-        logEntry = tk.Entry(oauthContainer)
-        logEntry.grid(row=1)
-        pasEntry = tk.Entry(oauthContainer)
-        pasEntry.grid(row=3)
-
-        self.btn_submit = tk.Button(self,
-                                    text="Войти",
-                                    font= defaultFont,
-                                    command=oauth)
-        self.btn_submit.pack(padx=10, pady=10, side=tk.RIGHT)
-
-        # reg
-        regLabel = tk.Label(self, text="Нет акканта?", font=regFont, foreground=FG_COL, background=BG_COL).pack()
-        regBtn = tk.Button(self,
-                           text="Регистрация",
-                           font=regFont,
-                           command=lambda: controller.show_frame(Registration))
-        regBtn.pack()
-
-class Registration(tk.Frame):
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
         # fonts style
         default_font = font.Font(family="TkDefaultFont:", size=12, weight="normal")
         entry_font = font.Font(family="TkTextFont:", size=14, weight="bold")
         reg_font = font.Font(family="TkDefaultFont:", size=10, weight="normal")
 
-        label = tk.Label(self,
-                         text="Введите логин",
-                         font=default_font)
-        label.grid(row=4)
+        # authorization oauth_container
+        oauth_container = tk.LabelFrame(self, padx=15, pady=10, text="Авторизация", foreground=fg_col, font=default_font)
+        oauth_container.configure(background=bg_col)
+        oauth_container.pack(padx=100, pady=50)
 
+        # items oauth_container
+        log_label = tk.Label(oauth_container, text="ЛОГИН", font=entry_font, foreground=fg_col, background=bg_col).grid(row=0)
+        pas_label = tk.Label(oauth_container, text="ПАРОЛЬ", font=entry_font, foreground=fg_col, background=bg_col).grid(row=2)
+        log_entry = tk.Entry(oauth_container)
+        log_entry.grid(row=1)
+        pas_entry = tk.Entry(oauth_container)
+        pas_entry.grid(row=3)
+
+        self.btn_submit = tk.Button(self,
+                                    text="Войти",
+                                    font= default_font,
+                                    command=oauth)
+        self.btn_submit.pack(padx=10, pady=10, side=tk.TOP)
+
+        # reg
+        reg_label = tk.Label(self, text="Нет акканта?", font=reg_font, foreground=fg_col, background=bg_col).pack(side=tk.LEFT)
+        reg_btn = tk.Button(self,
+                           text="Регистрация",
+                           font=reg_font,
+                           command=lambda: controller.show_frame(Registration))
+        reg_btn.pack(side=tk.LEFT)
+
+class Registration(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.configure(background=bg_col)
+        def registration():
+            log = log_entry.get()
+            pas = pas_entry.get()
+
+            res = database.select(connect, log)
+            if res==None:
+                print(1)
+                database.insert_account(connect, log, validate_password(pas))
+            elif str(log).lower()==res['login'].lower():
+                print("Такой аккаунт уже существует!")
+            else:
+                print("Error")
+
+        # fonts style
+        default_font = font.Font(family="TkDefaultFont:", size=12, weight="normal")
+        entry_font = font.Font(family="TkTextFont:", size=14, weight="bold")
+        reg_font = font.Font(family="TkDefaultFont:", size=10, weight="normal")
+
+        reg_container = tk.LabelFrame(self, padx=15, pady=10)
+        reg_container.configure(background=bg_col)
+        reg_container.pack(padx=100, pady=50)
+
+        log_label = tk.Label(reg_container, text="Введите логин", font=default_font, foreground=fg_col, background=bg_col)
+        log_label.grid(row=0, sticky="nw")
+        reg_label = tk.Label(reg_container, text="Введите пароль", font=default_font, foreground=fg_col, background=bg_col)
+        reg_label.grid(row=2, sticky="nw")
+
+        log_entry = tk.Entry(reg_container)
+        log_entry.grid(row=1)
+        pas_entry = tk.Entry(reg_container)
+        pas_entry.grid(row=3)
+
+        self.btn_submit = tk.Button(self,
+                                    text="Регистрация",
+                                    font=default_font,
+                                    command=registration)
+        self.btn_submit.pack(padx=10, pady=10, side=tk.TOP)
+class Account(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        def select():
+            res = database.select_account(connect, Oauth.log_entry.get())
+            print(res)
+        select()
+        account_container = tk.LabelFrame(self, padx=115, pady=60)
+        account_container.configure(background=bg_col)
+        account_container.pack(fill="both", side=tk.LEFT)
+
+        name_label = tk.Label(account_container,
+                              text="Ваше имя: ")
+        name_label.grid(row=0, sticky="nw")
+        name_label_view = tk.Label(account_container)
+        name_label_view.grid(row=0, column=1, sticky="nw")
+
+        surname_label = tk.Label(account_container,
+                              text="Ваша фамилия: ")
+        surname_label.grid(row=1, sticky="nw")
+        surname_label_view = tk.Label(account_container)
+        surname_label_view.grid(row=1, column=1, sticky="nw")
+
+        email_label = tk.Label(account_container,
+                                 text="Ваша почта: ")
+        email_label.grid(row=2, sticky="nw")
+        email_label_view = tk.Label(account_container)
+        email_label_view.grid(row=2, column=1, sticky="nw")
+
+        phone_label = tk.Label(account_container,
+                               text="Ваш номер телефона: ")
+        phone_label.grid(row=3, sticky="nw")
+        phone_label_view = tk.Label(account_container)
+        phone_label_view.grid(row=3, column=1, sticky="nw")
+
+        passport_label = tk.Label(account_container,
+                               text="Ваш паспорт: ")
+        passport_label.grid(row=4, sticky="nw")
+        passport_label_view = tk.Label(account_container)
+        passport_label_view.grid(row=4, column=1, sticky="nw")
 class Books(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         label = tk.Label(self,
                          text="Successful")
-        label.grid(row=4)
+        label.grid(row=0)

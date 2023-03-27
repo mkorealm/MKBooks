@@ -9,9 +9,12 @@ class database:
                                    database=database,
                                    charset=charset,
                                    cursorclass=pymysql.cursors.DictCursor)
-
-    def select(self, arg):
+    def select_account(self, arg):
         with self.con.cursor() as cur:
             cur.execute(f"SELECT * FROM customers WHERE login='{arg}'")
             res = cur.fetchone()
         return res
+    def insert_account(self, arg1, arg2):
+        with self.con.cursor() as cur:
+            cur.execute(f"INSERT INTO customers(login, password) VALUES ('{arg1}', '{arg2}')")
+        self.con.commit()
