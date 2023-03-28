@@ -7,6 +7,4 @@
 <img src="https://github.com/blackcater/blackcater/raw/main/images/Hi.gif" height="32"/></h1>
 <h3 align="center">I'm a ranepa student and and I am fond of programming</h3>
 
-<p align="center">
-  <img src="https://api.netlify.com/api/v1/badges/bc438b2e-9f12-4bbe-987e-d36fcef20a2f/deploy-status">
-</p>
+[![MKoreallycool GitHub stats](https://github-readme-stats.vercel.app/api?username=MKoreallycool)](https://github.com/MKoreallycool/github-readme-stats)
