@@ -8,3 +8,5 @@
 <h3 align="center">Computer science student, IT news writer from Russia 🇷🇺</h3>
 <h2 align="left">About Me:</h2>
 <h3 align="center">I'm a ranepa student and and I am fond of programming</h3>
+
+[![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=anuraghazra)](https://github.com/anuraghazra/github-readme-stats)
