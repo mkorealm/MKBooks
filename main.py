@@ -2,7 +2,7 @@ from database.connection.connect import database
 from gui.main import *
 from database.connection.config import con
 
-if __name__=="__main__":
+if __name__ == "__main__":
     # con = database(host=con[0],
     #                port=con[1],
     #                user=con[2],
