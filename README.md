@@ -14,14 +14,9 @@
   <img src="http://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=MKoreallycool&theme=blueberry"/>
 </p>
 
-<div style>
-  <p align="left">
-    <img src="http://github-profile-summary-cards.vercel.app/api/cards/stats?username=MKoreallycool&theme=blueberry"/>
-  </p>
-
-  <p align="right">
-    <img src="http://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=MKoreallycool&theme=blueberry"/>
-  </p>
+<div class="images">
+  <img src="http://github-profile-summary-cards.vercel.app/api/cards/stats?username=MKoreallycool&theme=blueberry"/>
+  <img src="http://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=MKoreallycool&theme=blueberry"/>
 </div>
   </head>
   
