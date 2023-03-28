@@ -12,7 +12,7 @@
 
 </html>
 
-**Skills:** VUE JS / REACT / JS / HTML / CSS
+**Skills:** Python, html,css
 
 <html
   </head>
