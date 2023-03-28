@@ -9,4 +9,4 @@
 <h2 align="left">About Me:</h2>
 <h3 align="center">I'm a ranepa student and and I am fond of programming</h3>
 
-[![MKoreallycool's GitHub stats](https://github-readme-stats.vercel.app/api?username=MKoreallycool)](https://github.com/MKoreallycool/github-readme-stats)
+[![MKoreallycool GitHub stats](https://github-readme-stats.vercel.app/api?username=MKoreallycool)](https://github.com/MKoreallycool/github-readme-stats)
