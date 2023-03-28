@@ -8,5 +8,5 @@
 <h3 align="center">I'm a ranepa student and and I am fond of programming</h3>
 
 <p align="center">
-[![MKoreallycool GitHub stats](https://github-readme-stats.vercel.app/api?username=MKoreallycool)](https://github.com/MKoreallycool/github-readme-stats)
+<img crc="https://github-readme-stats.vercel.app/api?username=MKoreallycool")
 </p>
