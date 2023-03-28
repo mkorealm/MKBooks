@@ -8,5 +8,5 @@
 <h3 align="center">I'm a ranepa student and and I am fond of programming</h3>
 
 <p align="center">
-<img crc="https://github-readme-stats.vercel.app/api?username=MKoreallycool")
+<img crc="https://api.netlify.com/api/v1/badges/bc438b2e-9f12-4bbe-987e-d36fcef20a2f/deploy-status")
 </p>
