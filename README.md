@@ -3,7 +3,7 @@
 ##### **MKBooks** - book store model
 ## Install
 
-```python
+```bash
 python -m pip install pymysql
 ```
 
