@@ -9,7 +9,8 @@
 <h3 align="center">I'm a ranepa student and and I am fond of programming</h3>
 
 <p align="center">
-  <img align="center" src="http://github-profile-summary-cards.vercel.app/api/cards/stats?username=MKoreallycool&theme=ayu_mirage"/>
+  <img src="http://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=MKoreallycool&theme=blueberry"/>
+  <img src="http://github-profile-summary-cards.vercel.app/api/cards/stats?username=MKoreallycool&theme=ayu_mirage"/>
 </p>
 
 <h4>This is my first python project</h4>
