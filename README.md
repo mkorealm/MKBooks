@@ -1,6 +1,6 @@
 # MKBooks
 ## Description
-##### **MKBooks** - book store model
+ **MKBooks** - book store model
 ## Install
 
 ```bash
