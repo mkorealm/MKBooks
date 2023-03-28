@@ -6,19 +6,22 @@
 
 <html>
   <head>
-<h1 align="center">Hi there, I'm Maxim 
-<img src="https://github.com/blackcater/blackcater/raw/main/images/Hi.gif" height="32"/></h1>
-<h3 align="center">I'm a ranepa student and and I am fond of programming</h3>
+    <h1 align="center">Hi there, I'm Maxim</h1>
+    <img src="https://github.com/blackcater/blackcater/raw/main/images/Hi.gif" height="32"/></h1>
+    <h3 align="center">I'm a ranepa student and and I am fond of programming</h3>
 
-<p align="center">
-  <img src="http://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=MKoreallycool&theme=blueberry"/>
-</p>
-
-<div class="images">
-  <img src="http://github-profile-summary-cards.vercel.app/api/cards/stats?username=MKoreallycool&theme=blueberry"/>
-  <img src="http://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=MKoreallycool&theme=blueberry"/>
-</div>
+    <h2>Skills:</h2>
+    <h3>Python, html, css</h3>
   </head>
+  
+  <p align="center">
+      <img src="http://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=MKoreallycool&theme=blueberry"/>
+    </p>
+
+  <div class="images">
+    <img src="http://github-profile-summary-cards.vercel.app/api/cards/stats?username=MKoreallycool&theme=blueberry"/>
+    <img src="http://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=MKoreallycool&theme=blueberry"/>
+  </div>
   
 <h4>This is my first python project</h4>
 </html>
