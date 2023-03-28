@@ -7,4 +7,7 @@
 python -m pip install pymysql
 ```
 
-![](http://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=MKoreallycool&theme=blueberry)
+## Author
++ Korolev Maxim
+    - [Vkontakte](https://vk.com/mkorealm)
+    - [GitHub](https://github.com/MKoreallycool)
