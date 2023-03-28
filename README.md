@@ -12,4 +12,4 @@
   <img align="center" src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=daniilshat&theme=solarized_dark"/>
 </p>
 
-<h3>This is my first python project</h3>
+<h4>This is my first python project</h4>
