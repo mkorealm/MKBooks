@@ -12,8 +12,12 @@
   <img src="http://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=MKoreallycool&theme=blueberry"/>
 </p>
 
-![](http://github-profile-summary-cards.vercel.app/api/cards/stats?username=MKoreallycool&theme=blueberry)
-![](http://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=MKoreallycool&theme=blueberry&utcOffset=8)
-![](http://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=MKoreallycool&theme=blueberry)
+<p align="left">
+  <img src="http://github-profile-summary-cards.vercel.app/api/cards/stats?username=MKoreallycool&theme=blueberry"/>\
+</p>
+
+<p align="right" 
+  <img src="http://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=MKoreallycool&theme=blueberry&utcOffset=/>
+</p>
 
 <h4>This is my first python project</h4>
