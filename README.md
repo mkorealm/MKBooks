@@ -14,5 +14,6 @@
 
 ![](http://github-profile-summary-cards.vercel.app/api/cards/stats?username=MKoreallycool&theme=blueberry)
 ![](http://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=MKoreallycool&theme=blueberry&utcOffset=8)
+![](http://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=MKoreallycool&theme=blueberry)
 
 <h4>This is my first python project</h4>
