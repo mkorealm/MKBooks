@@ -13,11 +13,11 @@
 </p>
 
 <p align="left">
-  <img src="http://github-profile-summary-cards.vercel.app/api/cards/stats?username=MKoreallycool&theme=blueberry"/>\
+  <img src="http://github-profile-summary-cards.vercel.app/api/cards/stats?username=MKoreallycool&theme=blueberry"/>
 </p>
 
 <p align="right" 
-  <img src="http://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=MKoreallycool&theme=blueberry&utcOffset=/>
+  <img src="http://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=MKoreallycool&theme=blueberry"/>
 </p>
 
 <h4>This is my first python project</h4>
