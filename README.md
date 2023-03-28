@@ -7,4 +7,4 @@
 <img src="https://github.com/blackcater/blackcater/raw/main/images/Hi.gif" height="32"/></h1>
 <h3 align="center">I'm a ranepa student and and I am fond of programming</h3>
 
-<img src="https://github-readme-stats.vercel.app/api?username=MKoreallycool"
+<img src="https://github-readme-stats.vercel.app/api?username=MKoreallycool"/>
