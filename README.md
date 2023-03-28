@@ -10,8 +10,11 @@
     <img src="https://github.com/blackcater/blackcater/raw/main/images/Hi.gif" height="32"/></h1>
     <h3 align="center">I'm a ranepa student and and I am fond of programming</h3>
 
-  <h2>Skills:</h2>
-  <h3>Python, html, css</h3>
+</html>
+
+Skills: VUE JS / REACT / JS / HTML / CSS
+
+<html
   </head>
   
   <p align="center">
