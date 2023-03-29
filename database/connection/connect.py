@@ -1,5 +1,7 @@
 import pymysql
 
+lst = []
+
 
 class database:
     def __init__(self, host, port, user, password, database, charset):
@@ -20,8 +22,25 @@ class database:
     def insert_account(self, arg1, arg2, arg3):
         with self.con.cursor() as cur:
             insert = f"INSERT INTO customers(name, login, password) VALUES ('{arg1}', '{arg2}', '{arg3}')"
-            print(insert)
             cur.execute(insert)
+        self.con.commit()
+
+    def select_column(self):
+        with self.con.cursor() as cur:
+            sql = f"SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'customers'"
+            cur.execute(sql)
+            res = cur.fetchall()
+            for i in res:
+                lst.append(i['COLUMN_NAME'])
+            filt = ['email', 'id', 'login', 'name', 'passport', 'password', 'phone', 'surname']
+            lst2 = list(filter(lambda x: x != lst, filt))
+            return lst2
+
+    def update(self, *args):
+        with self.con.cursor() as cur:
+            update = "UPDATE customers SET name='%s', surname='%s', email='%s', phone='%s', passport='%s' WHERE "
+            print(update, args)
+            cur.execute(update, args)
         self.con.commit()
 
     # def select_books(self):

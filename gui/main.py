@@ -1,6 +1,5 @@
-import tkinter as tk
 import os
-
+import tkinter as tk
 from tkinter import font
 from tkinter import ttk
 from tkinter.messagebox import showerror
@@ -14,12 +13,7 @@ script_dir = os.path.dirname(__file__)
 bg_col = "#212121"
 fg_col = "#00BFFF"
 
-connect = database(host=con[0],
-                   port=con[1],
-                   user=con[2],
-                   password=con[3],
-                   database=con[4],
-                   charset=con[5])
+connect = database(host=con[0], port=con[1], user=con[2], password=con[3], database=con[4], charset=con[5])
 
 
 class Windows(tk.Tk):
@@ -29,7 +23,7 @@ class Windows(tk.Tk):
         self.resizable(False, False)
         try:
             self.eval('tk::PlaceWindow %s center' % self.winfo_pathname(self.winfo_id()))
-            # fix for some devices
+        # fix for some devices
         except:
             self.eval('tk::PlaceWindow %s center' % self.winfo_toplevel())
 
@@ -103,7 +97,8 @@ class Oauth(tk.Frame):
         # reg
         reg_label = tk.Label(self, text="Нет акканта?", font=reg_font, foreground=fg_col, background=bg_col)
         reg_label.pack(side=tk.LEFT)
-        reg_btn = tk.Button(self, text="Регистрация", font=reg_font, command=lambda: controller.show_frame(Registration))
+        reg_btn = tk.Button(self, text="Регистрация", font=reg_font,
+                            command=lambda: controller.show_frame(Registration))
         reg_btn.pack(side=tk.LEFT)
 
 
@@ -127,7 +122,7 @@ class Registration(tk.Frame):
             elif str(log).lower() == res['login'].lower():
                 showerror("Ошибка", "Такой аккаунт уже существует!")
             else:
-                print("Error")
+                showerror("Ошибка", Exception)
 
         # fonts style
         default_font = font.Font(family="TkDefaultFont:", size=12, weight="normal")
@@ -164,6 +159,75 @@ class Account(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        self.configure(background=bg_col)
+
+        def open_main(event):
+            controller.show_frame(Main)
+            Main.login = self.login
+
+        def open_value():
+            def update(event):
+                connect.update(name_entry.get(), surname_entry.get(), email_entry.get(), phone_entry.get(),
+                               passport_entry.get())
+
+            win = tk.Tk()
+            win.title("Input Value")
+            win.resizable(False, False)
+            win.configure(background=bg_col)
+            try:
+                win.eval('tk::PlaceWindow %s center' % win.winfo_pathname(win.winfo_id()))
+            # fix for some devices
+            except:
+                win.eval('tk::PlaceWindow %s center' % win.winfo_toplevel())
+            default_font = font.Font(family="TkDefaultFont:", size=12, weight="normal")
+
+            style = ttk.Style()
+            style.configure("Acc.TLabel", font=default_font, foreground="#f2f2f2", background="#313131",
+                            relief="raised")
+            style.configure("Tap.TLabel", font=default_font, foreground="#f2f2f2", background="#313131")
+
+            # account account_container
+            account_container = tk.LabelFrame(win, padx=115, pady=60)
+            account_container.configure(background=bg_col)
+            account_container.bind("<Button>", set_login)
+            account_container.pack(fill="both", side="bottom")
+
+            # items account_container
+            name_label = tk.Label(account_container, text="Ваше имя: ", font=default_font, foreground=fg_col,
+                                  background=bg_col)
+            name_label.grid(row=1, sticky="nw", ipady=4)
+            name_entry = tk.Entry(account_container, font=default_font, foreground=fg_col, background=bg_col)
+            name_entry.grid(row=1, column=1, sticky="nw", ipady=4)
+
+            surname_label = tk.Label(account_container, text="Ваша фамилия: ", font=default_font, foreground=fg_col,
+                                     background=bg_col)
+            surname_label.grid(row=2, sticky="nw", ipady=4)
+            surname_entry = tk.Entry(account_container, font=default_font, foreground=fg_col, background=bg_col)
+            surname_entry.grid(row=2, column=1, sticky="nw", ipady=4)
+
+            email_label = tk.Label(account_container, text="Ваша почта: ", font=default_font, foreground=fg_col,
+                                   background=bg_col)
+            email_label.grid(row=3, sticky="nw", ipady=4)
+            email_entry = tk.Entry(account_container, font=default_font, foreground=fg_col, background=bg_col)
+            email_entry.grid(row=3, column=1, sticky="nw", ipady=4)
+
+            phone_label = tk.Label(account_container, text="Ваш номер телефона: ", font=default_font, foreground=fg_col,
+                                   background=bg_col)
+            phone_label.grid(row=4, sticky="nw", ipady=4)
+            phone_entry = tk.Entry(account_container, font=default_font, foreground=fg_col, background=bg_col)
+            phone_entry.grid(row=4, column=1, sticky="nw", ipady=4)
+
+            passport_label = tk.Label(account_container, text="Ваш паспорт: ", font=default_font, foreground=fg_col,
+                                      background=bg_col)
+            passport_label.grid(row=5, sticky="nw", ipady=4)
+            passport_entry = tk.Entry(account_container, font=default_font, foreground=fg_col, background=bg_col)
+            passport_entry.grid(row=5, column=1, sticky="nw", ipady=4)
+
+            btn_update = tk.Button(account_container, text="Отправить настройки", font=default_font)
+            btn_update.bind("<Button>", update)
+            btn_update.grid(row=6, sticky="nsew")
+
+            win.mainloop()
 
         def set_login(event):
             res = connect.select_account(self.login)
@@ -175,55 +239,57 @@ class Account(tk.Frame):
 
         default_font = font.Font(family="TkDefaultFont:", size=12, weight="normal")
 
+        style = ttk.Style()
+        style.configure("Acc.TLabel", font=default_font, foreground="#f2f2f2", background="#313131", relief="raised")
+        style.configure("Tap.TLabel", font=default_font, foreground="#f2f2f2", background="#313131")
+
         # account account_container
-        account_container = tk.LabelFrame(self, padx=115, pady=60)
+        account_container = tk.LabelFrame(self, padx=15, pady=10)
         account_container.configure(background=bg_col)
         account_container.bind("<Button>", set_login)
-        account_container.pack(fill="both", side="bottom")
+        account_container.pack(fill="both", side="bottom", padx=100, pady=50)
 
-        label = tk.Label(self, text="Кликните чтобы продолжить", font=default_font)
+        account_menu = ttk.Label(self, style="Acc.TLabel", text="Главное меню", background=bg_col)
+        account_menu.pack(anchor="nw")
+        account_menu.bind("<Button>", open_main)
+
+        label = ttk.Label(self, style="Tap.TLabel", text="Кликните чтобы продолжить", background=bg_col)
         label.bind("<Button>", set_login)
-        label.pack()
+        label.pack(anchor="n")
+
         # items account_container
         name_label = tk.Label(account_container, text="Ваше имя: ", font=default_font, foreground=fg_col,
                               background=bg_col)
-        name_label.grid(row=0, sticky="nw", ipady=4)
+        name_label.grid(row=1, sticky="nw", ipady=4)
         name_label_view = tk.Label(account_container, font=default_font, foreground=fg_col, background=bg_col)
-        name_label_view.grid(row=0, column=1, sticky="nw", ipady=4)
-        name_btn = tk.Button(account_container, text="Изменить имя", font=default_font)
-        name_btn.grid(row=0, column=2, sticky="nw")
+        name_label_view.grid(row=1, column=1, sticky="nw", ipady=4)
 
         surname_label = tk.Label(account_container, text="Ваша фамилия: ", font=default_font, foreground=fg_col,
                                  background=bg_col)
-        surname_label.grid(row=1, sticky="nw", ipady=4)
+        surname_label.grid(row=2, sticky="nw", ipady=4)
         surname_label_view = tk.Label(account_container, font=default_font, foreground=fg_col, background=bg_col)
-        surname_label_view.grid(row=1, column=1, sticky="nw", ipady=4)
-        surname_btn = tk.Button(account_container, text="Изменить фамилию", font=default_font)
-        surname_btn.grid(row=1, column=2, sticky="nw")
+        surname_label_view.grid(row=2, column=1, sticky="nw", ipady=4)
 
         email_label = tk.Label(account_container, text="Ваша почта: ", font=default_font, foreground=fg_col,
                                background=bg_col)
-        email_label.grid(row=2, sticky="nw", ipady=4)
+        email_label.grid(row=3, sticky="nw", ipady=4)
         email_label_view = tk.Label(account_container, font=default_font, foreground=fg_col, background=bg_col)
-        email_label_view.grid(row=2, column=1, sticky="nw", ipady=4)
-        email_btn = tk.Button(account_container, text="Изменить почту", font=default_font)
-        email_btn.grid(row=2, column=2, sticky="nw")
+        email_label_view.grid(row=3, column=1, sticky="nw", ipady=4)
 
         phone_label = tk.Label(account_container, text="Ваш номер телефона: ", font=default_font, foreground=fg_col,
                                background=bg_col)
-        phone_label.grid(row=3, sticky="nw", ipady=4)
+        phone_label.grid(row=4, sticky="nw", ipady=4)
         phone_label_view = tk.Label(account_container, font=default_font, foreground=fg_col, background=bg_col)
-        phone_label_view.grid(row=3, column=1, sticky="nw", ipady=4)
-        phone_btn = tk.Button(account_container, text="Изменить номер", font=default_font)
-        phone_btn.grid(row=3, column=2, sticky="nw")
+        phone_label_view.grid(row=4, column=1, sticky="nw", ipady=4)
 
         passport_label = tk.Label(account_container, text="Ваш паспорт: ", font=default_font, foreground=fg_col,
                                   background=bg_col)
-        passport_label.grid(row=4, sticky="nw", ipady=4)
+        passport_label.grid(row=5, sticky="nw", ipady=4)
         passport_label_view = tk.Label(account_container, font=default_font, foreground=fg_col, background=bg_col)
-        passport_label_view.grid(row=4, column=1, sticky="nw", ipady=4)
-        passport_btn = tk.Button(account_container, text="Изменить паспорт", font=default_font)
-        passport_btn.grid(row=4, column=2, sticky="nw")
+        passport_label_view.grid(row=5, column=1, sticky="nw", ipady=4)
+
+        btn_update = tk.Button(account_container, text="Редактировать профиль", font=default_font, command=open_value)
+        btn_update.grid(row=6, sticky="nsew")
 
         self.bind("<Button>", set_login)
 
@@ -239,7 +305,7 @@ class Main(tk.Frame):
             Account.login = self.login
 
         def set_login(event):
-            print(connect.select_account(self.login))
+            connect.select_account(self.login)
 
         default_font = font.Font(family="TkDefaultFont:", size=12, weight="normal")
 
