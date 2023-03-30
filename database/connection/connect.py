@@ -1,4 +1,5 @@
 import pymysql
+from gui.main import *
 
 lst = []
 
@@ -36,10 +37,13 @@ class database:
             lst2 = list(filter(lambda x: x != lst, filt))
             return lst2
 
-    def update(self, *args):
+    def update(self, login, *args):
+        log = login
+        res = self.select_account(log)
         with self.con.cursor() as cur:
-            update = "UPDATE customers SET name='%s', surname='%s', email='%s', phone='%s', passport='%s' WHERE "
-            print(update, args)
+            update = f"UPDATE customers SET name=%s, surname=%s, email=%s, phone=%s, passport=%s WHERE " \
+                     f"name='{res['name']}' AND surname='{res['surname']}' AND email='{res['email']}' AND " \
+                     f"phone='{res['phone']}' AND passport='{res['passport']}'"
             cur.execute(update, args)
         self.con.commit()
 
