@@ -10,4 +10,4 @@ python -m pip install pymysql
 ## Author
 + Korolev Maxim
     - [Vkontakte](https://vk.com/mkorealm)
-    - [GitHub](https://github.com/MKoreallycool)
+    - [GitHub](https://github.com/mkorealm)
