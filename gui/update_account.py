@@ -3,7 +3,7 @@ def open_value():
     from tkinter import ttk
     from tkinter import font
 
-    from main import Account, connect
+    from main import Account, connect, script_dir
 
     bg_col = "#212121"
     fg_col = "#00BFFF"
@@ -23,26 +23,76 @@ def open_value():
             pass
         connect.update(Account.login, name_entry.get(), surname_entry.get(), email_entry.get(), phone_entry.get(),
                        passport_entry.get())
-        win.destroy()
+        root.destroy()
 
-    win = tk.Tk()
-    win.title("Input Value")
-    win.resizable(False, False)
-    win.configure(background=bg_col)
-    try:
-        win.eval('tk::PlaceWindow %s center' % win.winfo_pathname(win.winfo_id()))
-    # fix for some devices
-    except:
-        win.eval('tk::PlaceWindow %s center' % win.winfo_toplevel())
+    root = tk.Tk()
+    root.configure(background=bg_col)
+
+    def close_win():
+        root.quit()
+
+    def min_win():
+        global w
+        root.withdraw()
+        root.overrideredirect(False)
+        root.iconify()
+        w = 1
+
+    def win(event):
+        global w
+        root.overrideredirect(True)
+        if w == 1:
+            w = 0
+
+    def get_pos(event):
+        global xwin
+        global ywin
+
+        xwin = event.x
+        ywin = event.y
+
+    def move_app(event):
+        root.geometry(f"+{event.x_root - xwin}+{event.y_root - ywin}")
+
+    # titlebar configure
+    global w
+    root.resizable(False, False)
+    root.overrideredirect(True)
+    root.bind("<Map>", win)
+    w = 0
+
+    # titlebar
+    title_bar = tk.Frame(root, bg=bg_col, relief="raised", bd=1)
+    title_bar.pack(expand=1, fill="x")
+    title_bar.bind("<Button-1>", get_pos)
+    title_bar.bind("<B1-Motion>", move_app)
+
+    title_label = tk.Label(title_bar, text="MKBooks", bg=bg_col, fg="White")
+    title_label.pack(side="left", pady=2)
+
+    # root.close_icon = tk.PhotoImage(file=script_dir + "\\resources\\close.png")
+    # root.close_icon = root.close_icon.subsample(25, 25)
+    # close_btn = tk.Button(title_bar, bg=bg_col, image=root.close_icon, relief="flat", command=close_win)
+    # close_btn.pack(side="right")
+    #
+    # root.collapse_btn = tk.PhotoImage(file=script_dir + "\\resources\\minus.png")
+    # root.collapse_btn = root.collapse_btn.subsample(25, 25)
+    # collapse_btn = tk.Button(title_bar, bg=bg_col, image=root.collapse_btn, relief="flat", command=min_win)
+    # collapse_btn.pack(side="right")
+
+    # center win
+    windowWidth = root.winfo_reqwidth()
+    windowHeight = root.winfo_reqheight()
+    positionRight = int(root.winfo_screenwidth() / 2.25 - windowWidth / 2)
+    # positionDown = int(root.winfo_screenheight() / 3 - windowHeight / 2)
+
+    root.geometry("+{}+{}".format(positionRight, windowHeight))
+
+    # fonts style
     default_font = font.Font(family="TkDefaultFont:", size=12, weight="normal")
 
-    style = ttk.Style()
-    style.configure("Acc.TLabel", font=default_font, foreground="#f2f2f2", background="#313131",
-                    relief="raised")
-    style.configure("Tap.TLabel", font=default_font, foreground="#f2f2f2", background="#313131")
-
     # account account_container
-    account_container = tk.LabelFrame(win, padx=115, pady=60)
+    account_container = tk.LabelFrame(root, padx=115, pady=60)
     account_container.configure(background=bg_col)
     account_container.pack(fill="both", side="bottom")
 
@@ -80,4 +130,4 @@ def open_value():
     btn_update = tk.Button(account_container, text="Отправить данные", font=default_font, command=lambda: update())
     btn_update.grid(row=6, column=1, sticky="nsew")
 
-    win.mainloop()
+    root.mainloop()

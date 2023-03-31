@@ -1,13 +1,13 @@
 import os
 import tkinter as tk
-from tkinter import ttk
 from tkinter import font
+from tkinter import ttk
 from tkinter.messagebox import showerror
-from gui.update_account import open_value
 
 from database.connection.config import con
 from database.connection.connect import database
 from func.validation_of_password import validate_password
+from gui.update_account import open_value
 
 script_dir = os.path.dirname(__file__)
 
@@ -20,17 +20,76 @@ connect = database(host=con[0], port=con[1], user=con[2], password=con[3], datab
 class Windows(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
-        self.wm_title("MKBooks")
+        global w
+
+        def close_win():
+            self.quit()
+
+        def min_win():
+            global w
+            self.withdraw()
+            self.overrideredirect(False)
+            self.iconify()
+            w = 1
+
+        def win(event):
+            global w
+            self.overrideredirect(True)
+            if w == 1:
+                w = 0
+
+        def get_pos(event):
+            global xwin
+            global ywin
+
+            xwin = event.x
+            ywin = event.y
+
+        def move_app(event):
+            self.geometry(f"+{event.x_root - xwin}+{event.y_root - ywin}")
+
+        # titlebar configure
         self.resizable(False, False)
-        try:
-            self.eval('tk::PlaceWindow %s center' % self.winfo_pathname(self.winfo_id()))
-        # fix for some devices
-        except:
-            self.eval('tk::PlaceWindow %s center' % self.winfo_toplevel())
+        self.overrideredirect(True)
+        self.bind("<Map>", win)
+        w = 0
+
+        # titlebar
+        title_bar = tk.Frame(self, bg=bg_col, relief="raised", bd=1)
+        title_bar.pack(expand=1, fill="x")
+        title_bar.bind("<Button-1>", get_pos)
+        title_bar.bind("<B1-Motion>", move_app)
+
+        title_label = tk.Label(title_bar, text="MKBooks", bg=bg_col, fg="White")
+        title_label.pack(side="left", pady=2)
+
+        self.close_icon = tk.PhotoImage(file=script_dir + "\\resources\\close.png")
+        self.close_icon = self.close_icon.subsample(25, 25)
+        close_btn = tk.Button(title_bar, bg=bg_col, image=self.close_icon, relief="flat", command=close_win)
+        close_btn.pack(side="right")
+
+        self.collapse_btn = tk.PhotoImage(file=script_dir + "\\resources\\minus.png")
+        self.collapse_btn = self.collapse_btn.subsample(25, 25)
+        collapse_btn = tk.Button(title_bar, bg=bg_col, image=self.collapse_btn, relief="flat", command=min_win)
+        collapse_btn.pack(side="right")
+
+        # center win
+        windowWidth = self.winfo_reqwidth()
+        windowHeight = self.winfo_reqheight()
+        positionRight = int(self.winfo_screenwidth() / 2.25 - windowWidth / 2)
+        # positionDown = int(self.winfo_screenheight() / 3 - windowHeight / 2)
+
+        self.geometry("+{}+{}".format(positionRight, windowHeight))
+
+        # try:
+        #     self.eval('tk::PlaceWindow %s center' % self.winfo_pathname(self.winfo_id()))
+        # # fix for some devices
+        # except:
+        #     self.eval('tk::PlaceWindow %s center' % self.winfo_toplevel())
 
         container = tk.Frame(self, height=400, width=600, background=bg_col)
         container.pack(side="top", fill="both", expand=True)
-        container.grid(row=0, column=0)
+        # container.grid(row=0, column=0)
 
         self.frames = {}
         for F in (Oauth, Registration, Main, Account, Main):
@@ -93,8 +152,8 @@ class Oauth(tk.Frame):
         pas_entry = tk.Entry(oauth_container, show="*")
         pas_entry.grid(row=3)
 
-        self.btn_submit = tk.Button(self, text="Войти", font=default_font, command=oauth)
-        self.btn_submit.pack(padx=10, pady=10, side=tk.TOP)
+        btn_submit = tk.Button(self, text="Войти", font=default_font, command=oauth)
+        btn_submit.pack(padx=10, pady=10)
 
         # reg
         reg_label = tk.Label(self, text="Нет акканта?", font=reg_font, foreground=fg_col, background=bg_col)
@@ -124,7 +183,7 @@ class Registration(tk.Frame):
             elif str(log).lower() == res['login'].lower():
                 showerror("Ошибка", "Такой аккаунт уже существует!")
             else:
-                showerror("Ошибка", Exception)
+                showerror("Ошибка", f"{Exception}")
 
         # fonts style
         default_font = font.Font(family="TkDefaultFont:", size=12, weight="normal")
@@ -188,14 +247,15 @@ class Account(tk.Frame):
             Account.passport = passport_label_view["text"]
             return
 
+        # fonts style
         default_font = font.Font(family="TkDefaultFont:", size=12, weight="normal")
 
         style = ttk.Style()
-        style.configure("Acc.TLabel", font=default_font, foreground="#f2f2f2", background="#313131", relief="raised")
-        style.configure("Tap.TLabel", font=default_font, foreground="#f2f2f2", background="#313131")
+        style.configure("Acc.TLabel", font=default_font, foreground="#f2f2f2", background=bg_col, relief="raised")
 
         # account account_container
-        account_container = tk.LabelFrame(self, padx=15, pady=10)
+        account_container = tk.LabelFrame(self, text="Аккаунт", foreground=fg_col,
+                                          font=default_font, padx=15, pady=10)
         account_container.configure(background=bg_col)
         account_container.pack(fill="both", side="bottom", padx=100, pady=50)
 
@@ -246,6 +306,7 @@ class Main(tk.Frame):
 
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+        self.configure(background=bg_col)
 
         def open_account(event):
             controller.show_frame(Account)
@@ -254,25 +315,12 @@ class Main(tk.Frame):
         def set_login(event):
             connect.select_account(self.login)
 
+        # fonts style
         default_font = font.Font(family="TkDefaultFont:", size=12, weight="normal")
 
         style = ttk.Style()
-        style.configure("Acc.TLabel", font=default_font, foreground="#f2f2f2", background="#313131", relief="raised")
+        style.configure("Acc.TLabel", font=default_font, foreground="#f2f2f2", background=bg_col, relief="raised")
 
-        menu_container = tk.LabelFrame(self)
-        menu_container.configure(background=bg_col)
-        menu_container.pack(fill="x", side="top")
-
-        main_container = tk.LabelFrame(self, text="MKBooks", foreground=fg_col, font=default_font, padx=15, pady=10)
-        main_container.configure(background=bg_col)
-        main_container.pack(padx=100, pady=50)
-        main_container.bind("<Button>", set_login)
-
-        account_menu = ttk.Label(menu_container, style="Acc.TLabel", text="Аккаунт")
-        account_menu.pack(side="left")
-        account_menu.bind("<Button>", open_account)
-
-        label = tk.Label(main_container, text="Кликните чтобы продолжить", font=default_font, foreground=fg_col,
-                         background=bg_col)
-        label.grid()
-        label.bind("<Button>", set_login)
+        account_menu = ttk.Label(self, style="Acc.TLabel", text="Аккаунт", background=bg_col)
+        account_menu.pack(anchor="nw")
+        account_menu.bind("<Button-1>", open_account)
