@@ -1,5 +1,4 @@
 import pymysql
-from gui.main import *
 
 lst = []
 

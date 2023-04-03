@@ -322,5 +322,10 @@ class Main(tk.Frame):
         style.configure("Acc.TLabel", font=default_font, foreground="#f2f2f2", background=bg_col, relief="raised")
 
         account_menu = ttk.Label(self, style="Acc.TLabel", text="Аккаунт", background=bg_col)
-        account_menu.pack(anchor="nw")
+        account_menu.pack(anchor="nw", side=tk.LEFT, ipady=1)
         account_menu.bind("<Button-1>", open_account)
+        self.exit_icon = tk.PhotoImage(file=script_dir + "\\resources\\exit.png")
+        self.exit_icon = self.exit_icon.subsample(26, 26)
+        account_menu = ttk.Button(self, style="Acc.TLabel", image=self.exit_icon,
+                                  command=lambda: controller.show_frame(Oauth))
+        account_menu.pack(anchor="nw", side=tk.LEFT)

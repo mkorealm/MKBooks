@@ -1,9 +1,8 @@
 def open_value():
     import tkinter as tk
-    from tkinter import ttk
     from tkinter import font
 
-    from main import Account, connect, script_dir
+    from main import Account, connect
 
     bg_col = "#212121"
     fg_col = "#00BFFF"
