@@ -92,12 +92,12 @@ class Windows(tk.Tk):
         # container.grid(row=0, column=0)
 
         self.frames = {}
-        for F in (Oauth, Registration, Main, Account, Main):
+        for F in (Oauth, Registration, Main, Account):
             frame = F(container, self)
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(Oauth)
+        self.show_frame(Main)
 
     def show_frame(self, cont):
         frame = self.frames[cont]
@@ -254,14 +254,13 @@ class Account(tk.Frame):
         style.configure("Acc.TLabel", font=default_font, foreground="#f2f2f2", background=bg_col, relief="raised")
 
         # account account_container
-        account_container = tk.LabelFrame(self, text="Аккаунт", foreground=fg_col,
-                                          font=default_font, padx=15, pady=10)
+        account_container = tk.LabelFrame(self, text="Аккаунт", foreground=fg_col, font=default_font, padx=15, pady=10)
         account_container.configure(background=bg_col)
         account_container.pack(fill="both", side="bottom", padx=100, pady=50)
 
         account_menu = ttk.Label(self, style="Acc.TLabel", text="Главное меню", background=bg_col)
         account_menu.pack(anchor="nw")
-        account_menu.bind("<Button>", open_main)
+        account_menu.bind("<Button-1>", open_main)
 
         # items account_container
         name_label = tk.Label(account_container, text="Ваше имя: ", font=default_font, foreground=fg_col,
@@ -295,7 +294,7 @@ class Account(tk.Frame):
         passport_label_view.grid(row=5, column=1, sticky="nw", ipady=4)
 
         btn_update = tk.Button(account_container, text="Редактировать профиль", font=default_font, command=open_value)
-        btn_update.bind("<Button>", set)
+        btn_update.bind("<Button-1>", set)
         btn_update.grid(row=6, sticky="nsew")
 
         self.bind("<Motion>", set)
@@ -312,8 +311,8 @@ class Main(tk.Frame):
             controller.show_frame(Account)
             Account.login = self.login
 
-        def set_login(event):
-            connect.select_account(self.login)
+        def select_genre():
+            print("Variable is: ", values[i].get())
 
         # fonts style
         default_font = font.Font(family="TkDefaultFont:", size=12, weight="normal")
@@ -321,11 +320,39 @@ class Main(tk.Frame):
         style = ttk.Style()
         style.configure("Acc.TLabel", font=default_font, foreground="#f2f2f2", background=bg_col, relief="raised")
 
-        account_menu = ttk.Label(self, style="Acc.TLabel", text="Аккаунт", background=bg_col)
-        account_menu.pack(anchor="nw", side=tk.LEFT, ipady=1)
+        account_container = tk.LabelFrame(self, foreground=fg_col, font=default_font, borderwidth=0)
+        account_container.configure(background=bg_col)
+        account_container.pack(anchor="nw", side=tk.TOP)
+
+        account_menu = ttk.Label(account_container, style="Acc.TLabel", text="Аккаунт", background=bg_col)
+        account_menu.grid(row=0, column=0)
         account_menu.bind("<Button-1>", open_account)
         self.exit_icon = tk.PhotoImage(file=script_dir + "\\resources\\exit.png")
-        self.exit_icon = self.exit_icon.subsample(26, 26)
-        account_menu = ttk.Button(self, style="Acc.TLabel", image=self.exit_icon,
+        self.exit_icon = self.exit_icon.subsample(30, 30)
+        account_menu = ttk.Button(account_container, style="Acc.TLabel", image=self.exit_icon,
                                   command=lambda: controller.show_frame(Oauth))
-        account_menu.pack(anchor="nw", side=tk.LEFT)
+        account_menu.grid(row=0, column=1)
+
+        settings_container = tk.LabelFrame(self, foreground=fg_col, font=default_font, pady=10, borderwidth=0)
+        settings_container.configure(background=bg_col)
+        settings_container.pack(anchor="nw", side=tk.TOP, fill="both")
+
+        store_container = tk.LabelFrame(self, foreground=fg_col, font=default_font, padx=15, pady=10)
+        store_container.configure(background=bg_col)
+        store_container.pack(fill="both", side="bottom", padx=100, pady=50)
+
+        genres = tk.Menubutton(settings_container, text="Выбрать жанр", font=default_font, relief="raised")
+
+        # No comment's
+        menu_genres = tk.Menu(genres, tearoff=0)
+        vars = []
+        values = []
+        for genre in connect.select_genres():
+            vars.append(genre)
+            arg = tk.BooleanVar()
+            values.append(arg)
+        for i in range(len(vars)):
+            menu_genres.add_checkbutton(label=vars[i], font=default_font, variable=values[i], command=select_genre)
+
+        genres["menu"] = menu_genres
+        genres.grid(ipadx=8, row=0, column=0)

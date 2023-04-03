@@ -1,7 +1,7 @@
 import pymysql
 
 lst = []
-
+genres = []
 
 class database:
     def __init__(self, host, port, user, password, database, charset):
@@ -37,11 +37,23 @@ class database:
 
     def select_column(self):
         with self.con.cursor() as cur:
-            sql = f"SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'customers'"
-            cur.execute(sql)
+            cur.execute(f"SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = N'customers'")
             res = cur.fetchall()
             for i in res:
                 lst.append(i['COLUMN_NAME'])
             filt = ['email', 'id', 'login', 'name', 'passport', 'password', 'phone', 'surname']
             lst2 = list(filter(lambda x: x != lst, filt))
             return lst2
+
+    def select_genres(self):
+        with self.con.cursor() as cur:
+            cur.execute(f"SELECT DISTINCT genre FROM genres")
+            res = cur.fetchall()
+            for i in res:
+                genres.append(i["genre"])
+            return genres
+
+    def search_be_genre(self, genre):
+        with self.con.cursor() as cur:
+            cur.execute(f"SELECT DISTINCT * FROM books, author, genres WHERE genre={genre}")
+            res = cur.fetchall()
