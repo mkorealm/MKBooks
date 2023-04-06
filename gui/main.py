@@ -5,7 +5,7 @@ from tkinter import ttk
 from tkinter.messagebox import showerror
 
 from database.connection.config import con
-from database.connection.connect import database
+from database.connection.connect import db
 from func.validation_of_password import validate_password
 from gui.update_account import open_value
 
@@ -14,7 +14,7 @@ script_dir = os.path.dirname(__file__)
 bg_col = "#212121"
 fg_col = "#00BFFF"
 
-connect = database(host=con[0], port=con[1], user=con[2], password=con[3], database=con[4], charset=con[5])
+connect = db(host=con[0], port=con[1], user=con[2], password=con[3], database=con[4], charset=con[5])
 
 
 class Windows(tk.Tk):
@@ -311,11 +311,16 @@ class Main(tk.Frame):
             controller.show_frame(Account)
             Account.login = self.login
 
-        def select_genre():
-            print("Variable is: ", values[i].get())
+        def get_books():
+            var = genres_box.get()
+            res = connect.search_be_genre(genres[var])
+            for i in res:
+                books_listbox.delete(0)
+                books_listbox.insert(0, i['title'])
 
         # fonts style
         default_font = font.Font(family="TkDefaultFont:", size=12, weight="normal")
+        box_item_font = font.Font(family="TkMenuFont:", size=12, weight="normal")
 
         style = ttk.Style()
         style.configure("Acc.TLabel", font=default_font, foreground="#f2f2f2", background=bg_col, relief="raised")
@@ -335,24 +340,26 @@ class Main(tk.Frame):
 
         settings_container = tk.LabelFrame(self, foreground=fg_col, font=default_font, pady=10, borderwidth=0)
         settings_container.configure(background=bg_col)
-        settings_container.pack(anchor="nw", side=tk.TOP, fill="both")
+        settings_container.pack(anchor="nw", side="top", fill="both")
 
-        store_container = tk.LabelFrame(self, foreground=fg_col, font=default_font, padx=15, pady=10)
+        store_container = tk.LabelFrame(self, foreground=fg_col, font=default_font, borderwidth=0)
         store_container.configure(background=bg_col)
-        store_container.pack(fill="both", side="bottom", padx=100, pady=50)
+        store_container.pack(anchor="nw", fill="x", side="top")
 
-        genres = tk.Menubutton(settings_container, text="Выбрать жанр", font=default_font, relief="raised")
+        genres_box = ttk.Combobox(settings_container, background=bg_col, font=box_item_font)
+        genres_box.grid(row=0, column=0)
 
-        # No comment's
-        menu_genres = tk.Menu(genres, tearoff=0)
-        vars = []
-        values = []
-        for genre in connect.select_genres():
-            vars.append(genre)
-            arg = tk.BooleanVar()
-            values.append(arg)
-        for i in range(len(vars)):
-            menu_genres.add_checkbutton(label=vars[i], font=default_font, variable=values[i], command=select_genre)
+        genres = connect.select_genres()
+        for i in genres:
+            genres_box["values"] = (*genres_box["values"], i)
 
-        genres["menu"] = menu_genres
-        genres.grid(ipadx=8, row=0, column=0)
+        self.search_icon = tk.PhotoImage(file=script_dir + "\\resources\\search.png")
+        genres_btn = tk.Button(settings_container, image=self.search_icon, bg=bg_col, command=get_books,
+                               width=21, height=21, borderwidth=0)
+        genres_btn.grid(row=0, column=1)
+
+        books_listbox = tk.Listbox(store_container, width=25, font=box_item_font)
+        books_listbox.grid(row=0, column=0)
+
+        select_btn = tk.Button(store_container, text="Добавить в корзину", font=default_font)
+        select_btn.grid(row=1, column=0, sticky="nw", pady=5)

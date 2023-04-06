@@ -1,9 +1,10 @@
 import pymysql
 
 lst = []
-genres = []
+genres = {}
 
-class database:
+
+class db:
     def __init__(self, host, port, user, password, database, charset):
         self.con = pymysql.connect(host=host,
                                    port=port,
@@ -47,13 +48,19 @@ class database:
 
     def select_genres(self):
         with self.con.cursor() as cur:
-            cur.execute(f"SELECT DISTINCT genre FROM genres")
+            cur.execute(f"SELECT DISTINCT genre, id FROM genres")
             res = cur.fetchall()
             for i in res:
-                genres.append(i["genre"])
+                genres[i["genre"]] = i["id"]
             return genres
 
     def search_be_genre(self, genre):
         with self.con.cursor() as cur:
-            cur.execute(f"SELECT DISTINCT * FROM books, author, genres WHERE genre={genre}")
+            cur.execute(f"SELECT DISTINCT * FROM books WHERE kod_g='{genre}'")
             res = cur.fetchall()
+            return res
+
+    # Добавление книги в корзину по id_c и id_b
+    def add_book(self, book):
+        with self.con.cursor() as cur:
+            cur.execute()
