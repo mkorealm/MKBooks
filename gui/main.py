@@ -103,7 +103,7 @@ class Windows(tk.Tk):
             self.frames[F] = frame
             frame.grid(row=0, column=0, sticky="nsew")
 
-        self.show_frame(Main)
+        self.show_frame(Oauth)
 
     def show_frame(self, cont):
         frame = self.frames[cont]
@@ -321,20 +321,27 @@ class Main(tk.Frame):
             Account.id = self.id
             Account.login = self.login
 
-        def get_books():
-            var = genres_box.get()
-            res = connect.search_be_genre(genres[var])
+        # def get_books():
+        #     var = genres_box.get()
+        #     res = connect.search_be_genre(genres[var])
+        #     value = []
+        #     for i in res:
+        #         value.append(i["title"])
+        #     books_listbox.delete(0)
+        #     books_listbox.insert(0, *value)
+
+        def get_books(var):
+            var = variable.get()
+            res = connect.search_be_genre(arg[var])
             value = []
             for i in res:
                 value.append(i["title"])
-            books_listbox.delete(0)
-            books_listbox.insert(0, *value)
+                books_listbox.delete(0, "end")
+                books_listbox.insert(0, *value)
 
         def add_book():
-            selected = books_listbox.curselection()
-            for i in selected:
-                print("Книга выбрана:", books_listbox.get(i))
-            # connect.add_book(self.id)
+            connect.add_book(self.id, books_listbox.get("anchor"))
+            # connect.add_book(self.id, id)
 
         # fonts style
         default_font = font.Font(family="TkDefaultFont:", size=12, weight="normal")
@@ -364,21 +371,16 @@ class Main(tk.Frame):
         store_container.configure(background=bg_col)
         store_container.pack(anchor="nw", fill="x", side="top")
 
-        genres_box = ttk.Combobox(settings_container, background=bg_col, font=box_item_font)
-        genres_box.grid(row=0, column=0)
-
-        genres = connect.select_genres()
-        for i in genres:
-            genres_box["values"] = (*genres_box["values"], i)
-
-        self.search_icon = tk.PhotoImage(file=script_dir + "\\resources\\search.png")
-        genres_btn = tk.Button(settings_container, image=self.search_icon, bg=bg_col, command=get_books,
-                               width=22, height=22, borderwidth=0)
-        genres_btn.grid(row=0, column=1)
+        # No comment's
+        arg = connect.select_genres()
+        variable = tk.StringVar()
+        variable.set("Выберите жанр")
+        menu_genres = tk.OptionMenu(store_container, variable, *arg, command=get_books)
+        menu_genres.grid(row=0, column=0, pady=10, sticky="nw")
 
         books_listbox = tk.Listbox(store_container, width=25, font=box_item_font)
-        books_listbox.grid(row=0, column=0)
+        books_listbox.grid(row=1, column=0)
 
         add_btn = tk.Button(store_container, text="Добавить в корзину", font=default_font,
                             command=add_book)
-        add_btn.grid(row=1, column=0, sticky="nw", pady=5)
+        add_btn.grid(row=2, column=0, sticky="nw", pady=5)

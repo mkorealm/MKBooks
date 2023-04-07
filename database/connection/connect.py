@@ -60,7 +60,12 @@ class db:
             res = cur.fetchall()
             return res
 
-    # Добавление книги в корзину по id_c и id_b
     def add_book(self, customer, book):
         with self.con.cursor() as cur:
-            cur.execute(f"INSERT INTO buy_basket(cod_c, kod_b, quantity, price) VALUES({customer}, {book}, 1, 1)")
+            sql = f"SELECT id from books WHERE title='{book}'"
+            cur.execute(sql)
+            res = cur.fetchone()
+            for i in res.values():
+                sql = f"INSERT INTO buy_basket(kod_c, kod_b, quantity, price) VALUES('{customer}', '{i}', '1', '1')"
+            cur.execute(sql)
+            self.con.commit()
