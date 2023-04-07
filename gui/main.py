@@ -4,10 +4,16 @@ from tkinter import font
 from tkinter import ttk
 from tkinter.messagebox import showerror
 
+from ctypes import windll
+
 from database.connection.config import con
 from database.connection.connect import db
 from func.validation_of_password import validate_password
 from gui.update_account import open_value
+
+GWL_EXSTYLE = -20
+WS_EX_APPWINDOW = 0x00040000
+WS_EX_TOOLWINDOW = 0x00000080
 
 script_dir = os.path.dirname(__file__)
 
@@ -82,10 +88,10 @@ class Windows(tk.Tk):
         self.geometry("+{}+{}".format(positionRight, windowHeight))
 
         # try:
-        #     self.eval('tk::PlaceWindow %s center' % self.winfo_pathname(self.winfo_id()))
+        #     self.eval("tk::PlaceWindow %s center" % self.winfo_pathname(self.winfo_id()))
         # # fix for some devices
         # except:
-        #     self.eval('tk::PlaceWindow %s center' % self.winfo_toplevel())
+        #     self.eval("tk::PlaceWindow %s center" % self.winfo_toplevel())
 
         container = tk.Frame(self, height=400, width=600, background=bg_col)
         container.pack(side="top", fill="both", expand=True)
@@ -113,14 +119,15 @@ class Oauth(tk.Frame):
             log = log_entry.get()
             pas = pas_entry.get()
 
-            res = database.select_account(connect, log)
+            res = db.select_account(connect, log)
             message = "Неверный логин или пароль!"
             if res == None:
                 showerror("Ошибка", message)
-            elif str(log).lower() == res['login'].lower() and str(pas) == res['password']:
+            elif str(log).lower() == res["login"].lower() and str(pas) == res["password"]:
+                Main.id = res["id"]
                 Main.login = log
                 return controller.show_frame(Main)
-            elif str(pas) != res['password']:
+            elif str(pas) != res["password"]:
                 showerror("Ошибка", message)
 
         # styles
@@ -180,7 +187,7 @@ class Registration(tk.Frame):
                     Main.login = log
                     database.insert_account(connect, name, log, validate_password(pas))
                     return controller.show_frame(Main)
-            elif str(log).lower() == res['login'].lower():
+            elif str(log).lower() == res["login"].lower():
                 showerror("Ошибка", "Такой аккаунт уже существует!")
             else:
                 showerror("Ошибка", f"{Exception}")
@@ -216,6 +223,7 @@ class Registration(tk.Frame):
 
 
 class Account(tk.Frame):
+    id = None
     login = None
 
     name = None
@@ -234,11 +242,11 @@ class Account(tk.Frame):
 
         def set(event):
             res = connect.select_account(self.login)
-            name_label_view["text"] = res['name']
-            surname_label_view["text"] = res['surname']
-            email_label_view["text"] = res['email']
-            phone_label_view["text"] = res['phone']
-            passport_label_view["text"] = res['passport']
+            name_label_view["text"] = res["name"]
+            surname_label_view["text"] = res["surname"]
+            email_label_view["text"] = res["email"]
+            phone_label_view["text"] = res["phone"]
+            passport_label_view["text"] = res["passport"]
 
             Account.name = name_label_view["text"]
             Account.surname = surname_label_view["text"]
@@ -301,6 +309,7 @@ class Account(tk.Frame):
 
 
 class Main(tk.Frame):
+    id = None
     login = None
 
     def __init__(self, parent, controller):
@@ -309,14 +318,23 @@ class Main(tk.Frame):
 
         def open_account(event):
             controller.show_frame(Account)
+            Account.id = self.id
             Account.login = self.login
 
         def get_books():
             var = genres_box.get()
             res = connect.search_be_genre(genres[var])
+            value = []
             for i in res:
-                books_listbox.delete(0)
-                books_listbox.insert(0, i['title'])
+                value.append(i["title"])
+            books_listbox.delete(0)
+            books_listbox.insert(0, *value)
+
+        def add_book():
+            selected = books_listbox.curselection()
+            for i in selected:
+                print("Книга выбрана:", books_listbox.get(i))
+            # connect.add_book(self.id)
 
         # fonts style
         default_font = font.Font(family="TkDefaultFont:", size=12, weight="normal")
@@ -355,11 +373,12 @@ class Main(tk.Frame):
 
         self.search_icon = tk.PhotoImage(file=script_dir + "\\resources\\search.png")
         genres_btn = tk.Button(settings_container, image=self.search_icon, bg=bg_col, command=get_books,
-                               width=21, height=21, borderwidth=0)
+                               width=22, height=22, borderwidth=0)
         genres_btn.grid(row=0, column=1)
 
         books_listbox = tk.Listbox(store_container, width=25, font=box_item_font)
         books_listbox.grid(row=0, column=0)
 
-        select_btn = tk.Button(store_container, text="Добавить в корзину", font=default_font)
-        select_btn.grid(row=1, column=0, sticky="nw", pady=5)
+        add_btn = tk.Button(store_container, text="Добавить в корзину", font=default_font,
+                            command=add_book)
+        add_btn.grid(row=1, column=0, sticky="nw", pady=5)

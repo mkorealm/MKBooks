@@ -61,6 +61,6 @@ class db:
             return res
 
     # Добавление книги в корзину по id_c и id_b
-    def add_book(self, book):
+    def add_book(self, customer, book):
         with self.con.cursor() as cur:
-            cur.execute()
+            cur.execute(f"INSERT INTO buy_basket(cod_c, kod_b, quantity, price) VALUES({customer}, {book}, 1, 1)")
