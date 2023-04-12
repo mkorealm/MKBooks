@@ -4,7 +4,7 @@ lst = []
 genres = {}
 
 
-class db:
+class Database:
     def __init__(self, host, port, user, password, database, charset):
         self.con = pymysql.connect(host=host,
                                    port=port,

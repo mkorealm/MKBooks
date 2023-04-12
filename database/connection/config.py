@@ -1,1 +1,1 @@
-con = ["localhost", 3306, "mkoreal", "mk!!2011", "conntest", "utf8mb4"]
+db = ["localhost", 3306, "mkorealm", "mk!!2011", "conntest", "utf8mb4"]

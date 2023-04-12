@@ -4,23 +4,21 @@ from tkinter import font
 from tkinter import ttk
 from tkinter.messagebox import showerror
 
-from ctypes import windll
-
-from database.connection.config import con
-from database.connection.connect import db
+from database.connection.connect import Database
 from func.validation_of_password import validate_password
 from gui.update_account import open_value
-
-GWL_EXSTYLE = -20
-WS_EX_APPWINDOW = 0x00040000
-WS_EX_TOOLWINDOW = 0x00000080
 
 script_dir = os.path.dirname(__file__)
 
 bg_col = "#212121"
 fg_col = "#00BFFF"
 
-connect = db(host=con[0], port=con[1], user=con[2], password=con[3], database=con[4], charset=con[5])
+try:
+    from database.connection.config import db
+
+    connect = Database(*db)
+except:
+    print("Error!")
 
 
 class Windows(tk.Tk):
@@ -66,7 +64,7 @@ class Windows(tk.Tk):
         title_bar.bind("<Button-1>", get_pos)
         title_bar.bind("<B1-Motion>", move_app)
 
-        title_label = tk.Label(title_bar, text="MKBooks", bg=bg_col, fg="White")
+        title_label = tk.Label(title_bar, text="MKBooks - books store model", bg=bg_col, fg="White")
         title_label.pack(side="left", pady=2)
 
         self.close_icon = tk.PhotoImage(file=script_dir + "\\resources\\close.png")
@@ -119,7 +117,7 @@ class Oauth(tk.Frame):
             log = log_entry.get()
             pas = pas_entry.get()
 
-            res = db.select_account(connect, log)
+            res = Database.select_account(connect, log)
             message = "Неверный логин или пароль!"
             if res == None:
                 showerror("Ошибка", message)
@@ -163,7 +161,7 @@ class Oauth(tk.Frame):
         btn_submit.pack(padx=10, pady=10)
 
         # reg
-        reg_label = tk.Label(self, text="Нет акканта?", font=reg_font, foreground=fg_col, background=bg_col)
+        reg_label = tk.Label(self, text="Нет аккаунта?", font=reg_font, foreground=fg_col, background=bg_col)
         reg_label.pack(side=tk.LEFT)
         reg_btn = tk.Button(self, text="Регистрация", font=reg_font,
                             command=lambda: controller.show_frame(Registration))
